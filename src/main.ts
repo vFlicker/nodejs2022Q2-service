@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
+import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 import { parse } from 'yaml';
-import { readFile } from 'fs/promises';
 
 import { AppModule } from './app.module';
 
@@ -12,6 +13,7 @@ async function bootstrap() {
   const document = parse(config);
 
   SwaggerModule.setup('doc', app, document);
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(4000);
 }
 bootstrap();
