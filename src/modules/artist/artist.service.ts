@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as createId } from 'uuid';
-import { Message } from './constants/artist.constants';
 
+import { Message } from './constants/artist.constants';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './interfaces/artist.interface';
@@ -24,14 +24,14 @@ export class ArtistService {
     return this.artists;
   }
 
-  findOneById(id: string): Artist {
-    const artist = this.artists.find((artists) => artists.id === id);
+  findOne(id: string): Artist {
+    const artist = this.artists.find((artist) => artist.id === id);
     if (!artist) throw new NotFoundException(Message.NOT_FOUND);
     return artist;
   }
 
   update(id: string, updateArtistDto: UpdateArtistDto): Artist {
-    const artist = this.findOneById(id);
+    const artist = this.findOne(id);
     Object.assign(artist, updateArtistDto);
     return artist;
   }

@@ -34,7 +34,7 @@ export class ArtistController {
   findOne(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): Artist {
-    return this.artistService.findOneById(id);
+    return this.artistService.findOne(id);
   }
 
   @Put(':id')
@@ -47,7 +47,7 @@ export class ArtistController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
     return this.artistService.remove(id);
   }
 }

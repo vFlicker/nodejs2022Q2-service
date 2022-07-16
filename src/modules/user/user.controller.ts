@@ -32,20 +32,20 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): User {
-    return this.userService.findOneById(id);
+    return this.userService.findOne(id);
   }
 
   @Put(':id')
   updatePassword(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ) {
+  ): User {
     return this.userService.updatePassword(id, updatePasswordDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
     return this.userService.remove(id);
   }
 }

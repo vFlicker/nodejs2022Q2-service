@@ -31,7 +31,7 @@ export class UserService {
     return this.users;
   }
 
-  findOneById(id: string): User {
+  findOne(id: string): User {
     const user = this.users.find((user) => user.id === id);
     if (!user) throw new NotFoundException(Message.NOT_FOUND);
     return user;
@@ -41,7 +41,7 @@ export class UserService {
     id: string,
     { newPassword, oldPassword }: UpdatePasswordDto,
   ): User {
-    const user = this.findOneById(id);
+    const user = this.findOne(id);
 
     if (user.password !== oldPassword) {
       throw new ForbiddenException(Message.WRONG_PASSWORD);
