@@ -9,8 +9,10 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 
+import { Album } from '../albums/interfaces/album.interface';
+import { Artist } from '../artists/interfaces/artist.interface';
+import { Track } from '../tracks/interfaces/track.interface';
 import { FavoriteService } from './favorite.service';
-import { Favorites } from './interfaces/favorite.interface';
 
 @Controller('favs')
 export class FavoriteController {
@@ -19,21 +21,21 @@ export class FavoriteController {
   @Post('/album/:id')
   addAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Favorites {
+  ): Album {
     return this.favoriteService.addAlbum(id);
   }
 
   @Post('/artist/:id')
   addArtist(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Favorites {
+  ): Artist {
     return this.favoriteService.addArtist(id);
   }
 
   @Post('/track/:id')
   addTrack(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Favorites {
+  ): Track {
     return this.favoriteService.addTrack(id);
   }
 
@@ -44,19 +46,19 @@ export class FavoriteController {
 
   @Delete('/album/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeAlbum(@Param('id') id: string) {
+  removeAlbum(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.favoriteService.removeAlbum(id);
   }
 
   @Delete('/artist/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeArtist(@Param('id') id: string) {
+  removeArtist(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.favoriteService.removeArtist(id);
   }
 
   @Delete('/track/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeTrack(@Param('id') id: string) {
+  removeTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.favoriteService.removeTrack(id);
   }
 }

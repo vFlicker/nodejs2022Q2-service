@@ -1,32 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 
 import { DatabaseService } from '../database/database.service';
-import { Favorites, FavoritesResponse } from './interfaces/favorite.interface';
+import { Album } from '../albums/interfaces/album.interface';
+import { Artist } from '../artists/interfaces/artist.interface';
+import { Track } from '../tracks/interfaces/track.interface';
+import { Favorites } from './interfaces/favorite.interface';
 
 @Injectable()
 export class FavoriteService {
   constructor(private readonly database: DatabaseService) {}
 
-  addAlbum(id: string): Favorites {
-    this.database.favorites.albums.push(id);
-    return this.database.favorites;
+  addAlbum(id: string): Album {
+    const album = this.database.albums.find((album) => album.id === id);
+    if (!album) throw new UnprocessableEntityException();
+    this.database.favorites.albums.push(album);
+
+    return album;
   }
 
-  addArtist(id: string): Favorites {
-    this.database.favorites.artists.push(id);
-    return this.database.favorites;
+  addArtist(id: string): Artist {
+    const artist = this.database.artists.find((artist) => artist.id === id);
+    if (!artist) throw new UnprocessableEntityException();
+    this.database.favorites.artists.push(artist);
+
+    return artist;
   }
 
-  addTrack(id: string): Favorites {
-    this.database.favorites.tracks.push(id);
-    return this.database.favorites;
+  addTrack(id: string): Track {
+    const track = this.database.tracks.find((track) => track.id === id);
+    if (!track) throw new UnprocessableEntityException();
+    this.database.favorites.tracks.push(track);
+
+    return track;
   }
 
-  findAll(): FavoritesResponse {
+  findAll(): Favorites {
     return {
-      albums: this.database.albums,
-      artists: this.database.artists,
-      tracks: this.database.tracks,
+      albums: this.database.favorites.albums,
+      artists: this.database.favorites.artists,
+      tracks: this.database.favorites.tracks,
     };
   }
 
