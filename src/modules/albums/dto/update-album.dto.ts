@@ -1,4 +1,12 @@
-import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  ValidateIf,
+} from 'class-validator';
+
+const IsNotNull = () => ValidateIf((_, value) => value !== null);
 
 export class UpdateAlbumDto {
   @IsString()
@@ -10,6 +18,6 @@ export class UpdateAlbumDto {
   year: number;
 
   @IsUUID('4')
-  @IsOptional()
-  artistId: string;
+  @IsNotNull()
+  artistId: string | null;
 }

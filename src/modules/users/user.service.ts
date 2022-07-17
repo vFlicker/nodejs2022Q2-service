@@ -8,20 +8,20 @@ import { v4 as createId } from 'uuid';
 import { Message } from './constants/message.constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './interfaces/user.interface';
+import { User } from './entities/user.entities';
 
 @Injectable()
 export class UserService {
   private readonly users: User[] = [];
 
   create(createUserDto: CreateUserDto): User {
-    const newUser: User = {
+    const newUser = new User({
       id: createId(),
-      version: 0,
+      version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
       ...createUserDto,
-    };
+    });
 
     this.users.push(newUser);
     return newUser;
