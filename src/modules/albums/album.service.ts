@@ -41,5 +41,12 @@ export class AlbumService {
     const index = this.database.albums.findIndex((album) => album.id === id);
     if (index === -1) throw new NotFoundException(Message.NOT_FOUND);
     this.database.albums.splice(index, 1);
+
+    this.database.favorites.albums.findIndex((album) => album.id === id);
+    this.database.favorites.albums.splice(index, 1);
+
+    for (const track of this.database.tracks) {
+      if (track.albumId === id) track.albumId = null;
+    }
   }
 }

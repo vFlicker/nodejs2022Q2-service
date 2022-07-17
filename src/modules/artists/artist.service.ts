@@ -41,5 +41,16 @@ export class ArtistService {
     const index = this.database.artists.findIndex((user) => user.id === id);
     if (index === -1) throw new NotFoundException(Message.NOT_FOUND);
     this.database.artists.splice(index, 1);
+
+    this.database.favorites.artists.findIndex((artist) => artist.id === id);
+    this.database.favorites.artists.splice(index, 1);
+
+    for (const album of this.database.albums) {
+      if (album.artistId === id) album.artistId = null;
+    }
+
+    for (const track of this.database.tracks) {
+      if (track.artistId === id) track.artistId = null;
+    }
   }
 }
