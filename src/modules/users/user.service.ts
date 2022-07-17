@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { v4 as createId } from 'uuid';
 
+import { DatabaseService } from '../database/database.service';
 import { Message } from './constants/message.constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -12,7 +13,7 @@ import { User } from './entities/user.entities';
 
 @Injectable()
 export class UserService {
-  private readonly users: User[] = [];
+  constructor(private readonly database: DatabaseService) {}
 
   create(createUserDto: CreateUserDto): User {
     const newUser = new User({
@@ -23,16 +24,16 @@ export class UserService {
       ...createUserDto,
     });
 
-    this.users.push(newUser);
+    this.database.users.push(newUser);
     return newUser;
   }
 
   findAll(): User[] {
-    return this.users;
+    return this.database.users;
   }
 
   findOne(id: string): User {
-    const user = this.users.find((user) => user.id === id);
+    const user = this.database.users.find((user) => user.id === id);
     if (!user) throw new NotFoundException(Message.NOT_FOUND);
     return user;
   }
@@ -55,8 +56,8 @@ export class UserService {
   }
 
   remove(id: string): void {
-    const index = this.users.findIndex((user) => user.id === id);
+    const index = this.database.users.findIndex((user) => user.id === id);
     if (index === -1) throw new NotFoundException(Message.NOT_FOUND);
-    this.users.splice(index, 1);
+    this.database.users.splice(index, 1);
   }
 }
