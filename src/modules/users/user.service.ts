@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { v4 as createId } from 'uuid';
 
-import { Message } from './constants/user.constants';
+import { Message } from './constants/message.constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './interfaces/user.interface';

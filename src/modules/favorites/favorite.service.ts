@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { AlbumService } from '../album/album.service';
-import { ArtistService } from '../artist/artist.service';
-import { TrackService } from '../track/track.service';
+import { AlbumService } from '../albums/album.service';
+import { ArtistService } from '../artists/artist.service';
+import { TrackService } from '../tracks/track.service';
 import { Favorites, FavoritesResponse } from './interfaces/favorite.interface';
 
 @Injectable()
