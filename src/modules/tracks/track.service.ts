@@ -38,8 +38,15 @@ export class TrackService {
   }
 
   remove(id: string) {
-    const index = this.database.tracks.findIndex((track) => track.id === id);
-    if (index === -1) throw new NotFoundException(Message.NOT_FOUND);
-    this.database.tracks.splice(index, 1);
+    const track = this.database.tracks.find((track) => track.id === id);
+    if (!track) throw new NotFoundException(Message.NOT_FOUND);
+
+    this.database.favorites.tracks = this.database.favorites.tracks.filter(
+      (track) => track.id !== id,
+    );
+
+    this.database.tracks = this.database.tracks.filter(
+      (track) => track.id !== id,
+    );
   }
 }

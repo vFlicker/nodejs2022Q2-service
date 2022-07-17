@@ -38,15 +38,19 @@ export class AlbumService {
   }
 
   remove(id: string) {
-    const index = this.database.albums.findIndex((album) => album.id === id);
-    if (index === -1) throw new NotFoundException(Message.NOT_FOUND);
-    this.database.albums.splice(index, 1);
-
-    this.database.favorites.albums.findIndex((album) => album.id === id);
-    this.database.favorites.albums.splice(index, 1);
+    const album = this.database.albums.find((album) => album.id === id);
+    if (!album) throw new NotFoundException(Message.NOT_FOUND);
 
     for (const track of this.database.tracks) {
       if (track.albumId === id) track.albumId = null;
     }
+
+    this.database.albums = this.database.albums.filter(
+      (album) => album.id !== id,
+    );
+
+    this.database.favorites.albums = this.database.albums.filter(
+      (album) => album.id !== id,
+    );
   }
 }

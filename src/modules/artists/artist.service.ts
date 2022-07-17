@@ -38,12 +38,8 @@ export class ArtistService {
   }
 
   remove(id: string): void {
-    const index = this.database.artists.findIndex((user) => user.id === id);
-    if (index === -1) throw new NotFoundException(Message.NOT_FOUND);
-    this.database.artists.splice(index, 1);
-
-    this.database.favorites.artists.findIndex((artist) => artist.id === id);
-    this.database.favorites.artists.splice(index, 1);
+    const artist = this.database.artists.find((artist) => artist.id === id);
+    if (!artist) throw new NotFoundException(Message.NOT_FOUND);
 
     for (const album of this.database.albums) {
       if (album.artistId === id) album.artistId = null;
@@ -52,5 +48,13 @@ export class ArtistService {
     for (const track of this.database.tracks) {
       if (track.artistId === id) track.artistId = null;
     }
+
+    this.database.favorites.artists = this.database.favorites.artists.filter(
+      (artist) => artist.id !== id,
+    );
+
+    this.database.artists = this.database.artists.filter(
+      (artist) => artist.id !== id,
+    );
   }
 }

@@ -4,8 +4,8 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 
-import { DatabaseService } from '../database/database.service';
 import { Album } from '../albums/interfaces/album.interface';
+import { DatabaseService } from '../database/database.service';
 import { Artist } from '../artists/interfaces/artist.interface';
 import { Track } from '../tracks/interfaces/track.interface';
 import { Favorites } from './interfaces/favorite.interface';
@@ -47,23 +47,35 @@ export class FavoriteService {
   }
 
   removeAlbum(id: string): void {
-    const index = this.database.favorites.albums.findIndex(
-      (album) => album === id,
+    const album = this.database.favorites.albums.find(
+      (album) => album.id === id,
     );
-    this.database.favorites.albums.splice(index, 1);
+    if (!album) throw new NotFoundException();
+
+    this.database.favorites.albums = this.database.favorites.albums.filter(
+      (album) => album.id !== id,
+    );
   }
 
   removeArtist(id: string): void {
-    const index = this.database.favorites.artists.findIndex(
-      (artist) => artist === id,
+    const artist = this.database.favorites.artists.find(
+      (artist) => artist.id === id,
     );
-    this.database.favorites.artists.splice(index, 1);
+    if (!artist) throw new NotFoundException();
+
+    this.database.favorites.artists = this.database.favorites.artists.filter(
+      (artist) => artist.id !== id,
+    );
   }
 
   removeTrack(id: string): void {
-    const index = this.database.favorites.tracks.findIndex(
-      (track) => track === id,
+    const track = this.database.favorites.tracks.find(
+      (track) => track.id === id,
     );
-    this.database.favorites.tracks.splice(index, 1);
+    if (!track) throw new NotFoundException();
+
+    this.database.favorites.tracks = this.database.favorites.tracks.filter(
+      (track) => track.id !== id,
+    );
   }
 }
