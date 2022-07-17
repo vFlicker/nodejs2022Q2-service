@@ -6,6 +6,7 @@ import { resolve } from 'path';
 import { parse } from 'yaml';
 
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(4000);
 }
 bootstrap();

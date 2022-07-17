@@ -16,7 +16,9 @@ export class FavoriteService {
 
   addAlbum(id: string): Album {
     const album = this.database.albums.find((album) => album.id === id);
-    if (!album) throw new UnprocessableEntityException();
+    if (!album) {
+      throw new UnprocessableEntityException(`Album doesn't exist.`);
+    }
     this.database.favorites.albums.push(album);
 
     return album;
@@ -24,7 +26,9 @@ export class FavoriteService {
 
   addArtist(id: string): Artist {
     const artist = this.database.artists.find((artist) => artist.id === id);
-    if (!artist) throw new UnprocessableEntityException();
+    if (!artist) {
+      throw new UnprocessableEntityException(`Artist doesn't exist.`);
+    }
     this.database.favorites.artists.push(artist);
 
     return artist;
@@ -32,9 +36,10 @@ export class FavoriteService {
 
   addTrack(id: string): Track {
     const track = this.database.tracks.find((track) => track.id === id);
-    if (!track) throw new UnprocessableEntityException();
+    if (!track) {
+      throw new UnprocessableEntityException(`Track with doesn't exist.`);
+    }
     this.database.favorites.tracks.push(track);
-
     return track;
   }
 
