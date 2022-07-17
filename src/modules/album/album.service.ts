@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as createId } from 'uuid';
-import { Message } from './constants/album.constants';
 
+import { Message } from './constants/album.constants';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { Album } from './interfaces/artist.interface';
+import { Album } from './interfaces/album.interface';
 
 @Injectable()
 export class AlbumService {
