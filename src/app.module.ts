@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { AlbumModule } from './modules/albums/album.module';
 import { ArtistModule } from './modules/artists/artist.module';
@@ -9,6 +10,7 @@ import { UserModule } from './modules/users/user.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     UserModule,
     ArtistModule,
     AlbumModule,

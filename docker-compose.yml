@@ -9,7 +9,7 @@ services:
       - .env
     command: npm run start:dev
     ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
+      - ${PORT}:${PORT}
     restart: always
     networks:
       - nest-app-network
