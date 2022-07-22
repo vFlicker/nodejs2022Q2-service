@@ -3,9 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { v4 as createId } from 'uuid';
+// import { v4 as createId } from 'uuid';
 
 import { DatabaseService } from '../database/database.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Message } from './constants/message.constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -13,19 +14,22 @@ import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private prisma: PrismaService,
+  ) {}
 
-  create(createUserDto: CreateUserDto): UserEntity {
-    const newUser = new UserEntity({
-      id: createId(),
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      ...createUserDto,
+  async create(createUserDto: CreateUserDto) /* : UserEntity */ {
+    const user = await this.prisma.user.create({
+      data: {
+        login: createUserDto.login,
+        password: createUserDto.password,
+        version: 1,
+      },
     });
 
-    this.database.users.push(newUser);
-    return newUser;
+    // this.database.users.push(user);
+    return user;
   }
 
   findAll(): UserEntity[] {
