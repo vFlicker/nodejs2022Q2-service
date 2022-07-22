@@ -15,7 +15,7 @@ import {
 
 import { UserService } from './user.service';
 import { CreateUserDto, UpdatePasswordDto } from './dto';
-import { UserEntity } from './entities/user.entity';
+import { User } from './interfaces/user.interface';
 
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -23,19 +23,19 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) /* : UserEntity */ {
+  create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.create(createUserDto);
   }
 
   @Get()
-  findAll(): UserEntity[] {
+  findAll(): Promise<User[]> {
     return this.userService.findAll();
   }
 
   @Get(':id')
   findOne(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): UserEntity {
+  ): Promise<User> {
     return this.userService.findOne(id);
   }
 
@@ -43,13 +43,15 @@ export class UserController {
   updatePassword(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): UserEntity {
+  ): Promise<User> {
     return this.userService.updatePassword(id, updatePasswordDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
+  remove(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<void> {
     return this.userService.remove(id);
   }
 }

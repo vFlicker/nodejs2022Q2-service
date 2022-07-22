@@ -3,23 +3,18 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-// import { v4 as createId } from 'uuid';
 
-import { DatabaseService } from '../database/database.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Message } from './constants/message.constants';
 import { CreateUserDto, UpdatePasswordDto } from './dto';
-import { UserEntity } from './entities/user.entity';
+import { User } from './interfaces/user.interface';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly database: DatabaseService,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) /* : UserEntity */ {
-    const user = await this.prisma.user.create({
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const newUser = await this.prisma.user.create({
       data: {
         login: createUserDto.login,
         password: createUserDto.password,
@@ -27,40 +22,60 @@ export class UserService {
       },
     });
 
-    // this.database.users.push(user);
-    return user;
+    return this.exclude(newUser, 'password');
   }
 
-  findAll(): UserEntity[] {
-    return this.database.users;
+  async findAll(): Promise<User[]> {
+    const users = await this.prisma.user.findMany();
+    return users.map((user) => this.exclude(user, 'password'));
   }
 
-  findOne(id: string): UserEntity {
-    const user = this.database.users.find((user) => user.id === id);
+  async findOne(id: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
     if (!user) throw new NotFoundException(Message.NOT_FOUND);
-    return user;
+
+    return this.exclude(user, 'password');
   }
 
-  updatePassword(
+  async updatePassword(
     id: string,
     { newPassword, oldPassword }: UpdatePasswordDto,
-  ): UserEntity {
-    const user = this.findOne(id);
+  ): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) throw new NotFoundException(Message.NOT_FOUND);
 
     if (user.password !== oldPassword) {
       throw new ForbiddenException(Message.WRONG_PASSWORD);
     }
 
-    user.password = newPassword;
-    user.version++;
-    user.updatedAt = Date.now();
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        password: newPassword,
+        version: { increment: 1 },
+      },
+    });
 
-    return user;
+    return this.exclude(updatedUser, 'password');
   }
 
-  remove(id: string): void {
-    const index = this.database.users.findIndex((user) => user.id === id);
-    if (index === -1) throw new NotFoundException(Message.NOT_FOUND);
-    this.database.users.splice(index, 1);
+  async remove(id: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) throw new NotFoundException(Message.NOT_FOUND);
+
+    await this.prisma.user.delete({ where: { id } });
+  }
+
+  private exclude<User, Key extends keyof User>(
+    user: User,
+    ...keys: Key[]
+  ): Omit<User, Key> {
+    for (const key of keys) delete user[key];
+    return user;
   }
 }
