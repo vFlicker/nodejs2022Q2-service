@@ -16,3 +16,10 @@ model User {
   login     String
   password  String
 }
+
+model Album {
+  id       String @id @default(uuid())
+  name     String
+  year     Int
+  artistId String @db.Uuid
+}

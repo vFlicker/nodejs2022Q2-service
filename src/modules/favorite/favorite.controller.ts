@@ -8,8 +8,8 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { Album } from '@prisma/client';
 
-import { AlbumEntity } from '../album/entities/album.entity';
 import { ArtistEntity } from '../artist/entities/artist.entity';
 import { TrackEntity } from '../track/entities/track.entity';
 import { FavoritesEntity } from './entities/favorite.entity';
@@ -22,7 +22,7 @@ export class FavoriteController {
   @Post('/album/:id')
   addAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): AlbumEntity {
+  ): Album {
     return this.favoriteService.addAlbum(id);
   }
 

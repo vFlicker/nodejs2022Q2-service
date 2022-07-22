@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Album } from '@prisma/client';
 
-import { AlbumEntity } from 'src/modules/album/entities/album.entity';
 import { ArtistEntity } from '../artist/entities/artist.entity';
 import { FavoritesEntity } from '../favorite/entities/favorite.entity';
 import { TrackEntity } from '../track/entities/track.entity';
@@ -8,7 +8,7 @@ import { User } from '../user/interfaces/user.interface';
 
 @Injectable()
 export class DatabaseService {
-  albums: AlbumEntity[] = [];
+  albums: Album[] = [];
   tracks: TrackEntity[] = [];
   artists: ArtistEntity[] = [];
   users: User[] = [];
