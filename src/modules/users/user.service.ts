@@ -8,8 +8,7 @@ import {
 import { DatabaseService } from '../database/database.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Message } from './constants/message.constants';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdatePasswordDto } from './dto/update-password.dto';
+import { CreateUserDto, UpdatePasswordDto } from './dto';
 import { UserEntity } from './entities/user.entity';
 
 @Injectable()

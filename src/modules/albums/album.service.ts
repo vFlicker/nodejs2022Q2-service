@@ -4,8 +4,7 @@ import { v4 as createId } from 'uuid';
 import { DatabaseService } from '../database/database.service';
 
 import { Message } from './constants/message.constants';
-import { CreateAlbumDto } from './dto/create-album.dto';
-import { UpdateAlbumDto } from './dto/update-album.dto';
+import { CreateAlbumDto, UpdateAlbumDto } from './dto';
 import { AlbumEntity } from './entities/album.entity';
 
 @Injectable()

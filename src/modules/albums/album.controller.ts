@@ -12,8 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { AlbumService } from './album.service';
-import { CreateAlbumDto } from './dto/create-album.dto';
-import { UpdateAlbumDto } from './dto/update-album.dto';
+import { CreateAlbumDto, UpdateAlbumDto } from './dto';
 import { AlbumEntity } from './entities/album.entity';
 
 @Controller('album')
@@ -31,7 +30,9 @@ export class AlbumController {
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): AlbumEntity {
+  findOne(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): AlbumEntity {
     return this.albumService.findOne(id);
   }
 

@@ -3,8 +3,7 @@ import { v4 as createId } from 'uuid';
 
 import { DatabaseService } from '../database/database.service';
 import { Message } from './constants/message.constants';
-import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
+import { CreateArtistDto, UpdateArtistDto } from './dto';
 import { ArtistEntity } from './entities/artist.entity';
 
 @Injectable()

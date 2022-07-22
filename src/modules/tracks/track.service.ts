@@ -3,8 +3,7 @@ import { v4 as createId } from 'uuid';
 
 import { DatabaseService } from '../database/database.service';
 import { Message } from './constants/message.constants';
-import { CreateTrackDto } from './dto/create-track.dto';
-import { UpdateTrackDto } from './dto/update-track.dto';
+import { CreateTrackDto, UpdateTrackDto } from './dto';
 import { TrackEntity } from './entities/track.entity';
 
 @Injectable()
