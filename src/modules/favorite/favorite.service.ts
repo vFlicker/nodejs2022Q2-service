@@ -4,10 +4,10 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 
-import { AlbumEntity } from '../albums/entities/album.entity';
+import { AlbumEntity } from '../album/entities/album.entity';
 import { DatabaseService } from '../database/database.service';
-import { ArtistEntity } from '../artists/entities/artist.entity';
-import { TrackEntity } from '../tracks/entities/track.entity';
+import { ArtistEntity } from '../artist/entities/artist.entity';
+import { TrackEntity } from '../track/entities/track.entity';
 import { FavoritesEntity } from './entities/favorite.entity';
 
 @Injectable()
