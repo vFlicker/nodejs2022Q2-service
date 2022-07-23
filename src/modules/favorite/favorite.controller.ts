@@ -46,7 +46,7 @@ export class FavoriteController {
   @HttpCode(HttpStatus.NO_CONTENT)
   removeAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): void {
+  ): Promise<void> {
     return this.favoriteService.removeAlbum(id);
   }
 
@@ -54,7 +54,7 @@ export class FavoriteController {
   @HttpCode(HttpStatus.NO_CONTENT)
   removeArtist(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): void {
+  ): Promise<void> {
     return this.favoriteService.removeArtist(id);
   }
 
@@ -62,7 +62,7 @@ export class FavoriteController {
   @HttpCode(HttpStatus.NO_CONTENT)
   removeTrack(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): void {
+  ): Promise<void> {
     return this.favoriteService.removeTrack(id);
   }
 }

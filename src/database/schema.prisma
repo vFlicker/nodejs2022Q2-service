@@ -12,67 +12,47 @@ model User {
   id        String   @id @default(uuid()) @db.Uuid
   login     String   @unique
   password  String
-  version   Int
+  version   Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@index([login], name: "IDX_USER__LOGIN")
-  @@map("users")
 }
 
 model Favorite {
-  id       String  @id @default(uuid()) @db.Uuid
-  albumId  String? @db.Uuid
-  artistId String? @db.Uuid
-  trackId  String? @db.Uuid
-  artist   Artist? @relation(fields: [artistId], references: [id])
-  Album    Album?  @relation(fields: [albumId], references: [id])
-  Track    Track?  @relation(fields: [trackId], references: [id])
-
-  @@index([albumId], name: "IDX_FAVORITE__ALBUM_ID")
-  @@index([artistId], name: "IDX_FAVORITE__ARTIST_ID")
-  @@index([trackId], name: "IDX_FAVORITE__TRACK_ID")
-  @@map("favorites")
+  id      String   @id @default(uuid()) @db.Uuid
+  artists Artist[]
+  albums  Album[]
+  tracks  Track[]
 }
 
 model Album {
-  id       String     @id @default(uuid()) @db.Uuid
-  name     String
-  year     Int
-  artistId String?    @db.Uuid
-  artist   Artist?    @relation(fields: [artistId], references: [id])
-  Favorite Favorite[]
-  Track    Track[]
-
-  @@index([name], name: "IDX_ALBUM__NAME")
-  @@index([year], name: "IDX_ALBUM__YEAR")
-  @@index([artistId], name: "IDX_ALBUM__ARTIST_ID")
-  @@map("albums")
+  id         String    @id @default(uuid()) @db.Uuid
+  name       String
+  year       Int
+  Artist     Artist?   @relation(fields: [artistId], references: [id])
+  artistId   String?   @db.Uuid
+  Favorite   Favorite? @relation(fields: [favoriteId], references: [id])
+  favoriteId String?   @db.Uuid
+  Tracks     Track[]
 }
 
 model Artist {
-  id       String     @id @default(uuid()) @db.Uuid
-  name     String
-  grammy   Boolean
-  Album    Album[]
-  Favorite Favorite[]
-  Track    Track[]
-
-  @@index([name], name: "IDX_ARTIST__NAME")
-  @@map("artists")
+  id         String    @id @default(uuid()) @db.Uuid
+  name       String
+  grammy     Boolean
+  Favorite   Favorite? @relation(fields: [favoriteId], references: [id])
+  favoriteId String?   @db.Uuid
+  Albums     Album[]
+  Tracks     Track[]
 }
 
 model Track {
-  id       String     @id @default(uuid()) @db.Uuid
-  name     String
-  duration Int
-  albumId  String?    @db.Uuid
-  artistId String?    @db.Uuid
-  Artist   Artist?    @relation(fields: [artistId], references: [id])
-  Album    Album?     @relation(fields: [albumId], references: [id])
-  Favorite Favorite[]
-
-  @@index([artistId], name: "IDX_TRACK__ARTIST_ID")
-  @@index([albumId], name: "IDX_TRACK__ALBUM_ID")
-  @@map("tracks")
+  id         String    @id @default(uuid()) @db.Uuid
+  name       String
+  duration   Int
+  Album      Album?    @relation(fields: [albumId], references: [id])
+  albumId    String?   @db.Uuid
+  Artist     Artist?   @relation(fields: [artistId], references: [id])
+  artistId   String?   @db.Uuid
+  Favorite   Favorite? @relation(fields: [favoriteId], references: [id])
+  favoriteId String?   @db.Uuid
 }

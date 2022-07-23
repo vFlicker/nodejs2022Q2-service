@@ -18,7 +18,6 @@ export class UserService {
       data: {
         login: createUserDto.login,
         password: createUserDto.password,
-        version: 1,
       },
     });
 
