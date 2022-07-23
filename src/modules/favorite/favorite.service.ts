@@ -3,50 +3,71 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Album, Artist, Track } from '@prisma/client';
+import { Album, Artist, Favorite, Track } from '@prisma/client';
 
 import { DatabaseService } from '../database/database.service';
-import { FavoritesEntity } from './entities/favorite.entity';
+import { PrismaService } from '../prisma/prisma.service';
+import { Message } from './constants/message.constants';
 
 @Injectable()
 export class FavoriteService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private prisma: PrismaService,
+  ) {}
 
-  addAlbum(id: string): Album {
-    const album = this.database.albums.find((album) => album.id === id);
+  async addAlbum(id: string): Promise<Album> {
+    const album = await this.prisma.album.findUnique({ where: { id } });
+
     if (!album) {
-      throw new UnprocessableEntityException(`Album doesn't exist.`);
+      throw new UnprocessableEntityException(Message.NOT_EXISTENCE('Album'));
     }
-    this.database.favorites.albums.push(album);
+
+    await this.prisma.favorite.create({
+      data: {
+        album: { connect: { id } },
+      },
+    });
 
     return album;
   }
 
-  addArtist(id: string): Artist {
-    const artist = this.database.artists.find((artist) => artist.id === id);
+  async addArtist(id: string): Promise<Artist> {
+    const artist = await this.prisma.artist.findUnique({ where: { id } });
+
     if (!artist) {
-      throw new UnprocessableEntityException(`Artist doesn't exist.`);
+      throw new UnprocessableEntityException(Message.NOT_EXISTENCE('Artist'));
     }
-    this.database.favorites.artists.push(artist);
+
+    await this.prisma.favorite.create({
+      data: {
+        artist: { connect: { id } },
+      },
+    });
 
     return artist;
   }
 
-  addTrack(id: string): Track {
-    const track = this.database.tracks.find((track) => track.id === id);
+  async addTrack(id: string): Promise<Track> {
+    const track = await this.prisma.track.findUnique({ where: { id } });
+
     if (!track) {
-      throw new UnprocessableEntityException(`Track with doesn't exist.`);
+      throw new UnprocessableEntityException(Message.NOT_EXISTENCE('Track'));
     }
-    this.database.favorites.tracks.push(track);
+
+    await this.prisma.favorite.create({
+      data: {
+        track: { connect: { id } },
+      },
+    });
+
     return track;
   }
 
-  findAll(): FavoritesEntity {
-    return {
-      albums: this.database.favorites.albums,
-      artists: this.database.favorites.artists,
-      tracks: this.database.favorites.tracks,
-    };
+  async findAll(): Promise<Favorite[]> {
+    // TODO: should return { albums: [albums], artists: [artists], tracks: [tracks] }
+    const favorites = await this.prisma.favorite.findMany();
+    return favorites;
   }
 
   removeAlbum(id: string): void {

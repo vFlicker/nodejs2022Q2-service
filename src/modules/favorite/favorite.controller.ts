@@ -8,7 +8,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { Album, Artist, Track } from '@prisma/client';
+import { Album, Artist, Favorite, Track } from '@prisma/client';
 
 import { FavoritesEntity } from './entities/favorite.entity';
 import { FavoriteService } from './favorite.service';
@@ -20,26 +20,26 @@ export class FavoriteController {
   @Post('/album/:id')
   addAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Album {
+  ): Promise<Album> {
     return this.favoriteService.addAlbum(id);
   }
 
   @Post('/artist/:id')
   addArtist(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Artist {
+  ): Promise<Artist> {
     return this.favoriteService.addArtist(id);
   }
 
   @Post('/track/:id')
   addTrack(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Track {
+  ): Promise<Track> {
     return this.favoriteService.addTrack(id);
   }
 
   @Get()
-  findAll(): FavoritesEntity {
+  findAll(): Promise<Favorite[]> {
     return this.favoriteService.findAll();
   }
 
