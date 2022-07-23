@@ -1,9 +1,7 @@
-import { Album, Artist } from '@prisma/client';
-
-import { TrackEntity } from '../../track/entities/track.entity';
+import { Album, Artist, Track } from '@prisma/client';
 
 export interface FavoritesEntity {
   albums: Album[];
   artists: Artist[];
-  tracks: TrackEntity[];
+  tracks: Track[];
 }

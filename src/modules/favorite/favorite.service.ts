@@ -3,10 +3,9 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Album, Artist } from '@prisma/client';
+import { Album, Artist, Track } from '@prisma/client';
 
 import { DatabaseService } from '../database/database.service';
-import { TrackEntity } from '../track/entities/track.entity';
 import { FavoritesEntity } from './entities/favorite.entity';
 
 @Injectable()
@@ -33,7 +32,7 @@ export class FavoriteService {
     return artist;
   }
 
-  addTrack(id: string): TrackEntity {
+  addTrack(id: string): Track {
     const track = this.database.tracks.find((track) => track.id === id);
     if (!track) {
       throw new UnprocessableEntityException(`Track with doesn't exist.`);

@@ -30,3 +30,10 @@ model Artist {
   grammy Boolean
 }
 
+model Track {
+  id       String @id @default(uuid())
+  name     String
+  albumId  String @db.Uuid
+  artistId String @db.Uuid
+  duration Int
+}
