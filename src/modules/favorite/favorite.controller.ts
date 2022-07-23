@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { Album, Artist, Favorite, Track } from '@prisma/client';
 
-import { FavoritesEntity } from './entities/favorite.entity';
 import { FavoriteService } from './favorite.service';
 
 @Controller('favs')

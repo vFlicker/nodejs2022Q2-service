@@ -65,7 +65,7 @@ export class FavoriteService {
   }
 
   async findAll(): Promise<Favorite[]> {
-    // TODO: should return { albums: [albums], artists: [artists], tracks: [tracks] }
+    // TODO: should return { albums: , artists: , tracks:  }
     const favorites = await this.prisma.favorite.findMany();
     return favorites;
   }

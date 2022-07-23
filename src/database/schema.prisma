@@ -21,18 +21,14 @@ model User {
 }
 
 model Favorite {
-  id String @id @default(uuid()) @db.Uuid
-
-  albumId String? @db.Uuid
-  album   Album?  @relation(fields: [albumId], references: [id])
-
+  id       String  @id @default(uuid()) @db.Uuid
+  albumId  String? @db.Uuid
   artistId String? @db.Uuid
+  trackId  String? @db.Uuid
   artist   Artist? @relation(fields: [artistId], references: [id])
+  Album    Album?  @relation(fields: [albumId], references: [id])
+  Track    Track?  @relation(fields: [trackId], references: [id])
 
-  trackId String? @db.Uuid
-  track   Track?  @relation(fields: [trackId], references: [id])
-
-  // @@id([albumId, artistId, trackId])
   @@index([albumId], name: "IDX_FAVORITE__ALBUM_ID")
   @@index([artistId], name: "IDX_FAVORITE__ARTIST_ID")
   @@index([trackId], name: "IDX_FAVORITE__TRACK_ID")
@@ -40,15 +36,13 @@ model Favorite {
 }
 
 model Album {
-  id   String @id @default(uuid()) @db.Uuid
-  name String
-  year Int
-
-  artistId String @db.Uuid
-  artist   Artist @relation(fields: [artistId], references: [id])
-
-  Track    Track[]
+  id       String     @id @default(uuid()) @db.Uuid
+  name     String
+  year     Int
+  artistId String?    @db.Uuid
+  artist   Artist?    @relation(fields: [artistId], references: [id])
   Favorite Favorite[]
+  Track    Track[]
 
   @@index([name], name: "IDX_ALBUM__NAME")
   @@index([year], name: "IDX_ALBUM__YEAR")
@@ -57,29 +51,25 @@ model Album {
 }
 
 model Artist {
-  id     String  @id @default(uuid()) @db.Uuid
-  name   String
-  grammy Boolean
-
+  id       String     @id @default(uuid()) @db.Uuid
+  name     String
+  grammy   Boolean
   Album    Album[]
-  Track    Track[]
   Favorite Favorite[]
+  Track    Track[]
 
   @@index([name], name: "IDX_ARTIST__NAME")
   @@map("artists")
 }
 
 model Track {
-  id       String @id @default(uuid()) @db.Uuid
+  id       String     @id @default(uuid()) @db.Uuid
   name     String
   duration Int
-
-  artistId String @db.Uuid
-  artist   Artist @relation(fields: [artistId], references: [id])
-
-  albumId String @db.Uuid
-  album   Album  @relation(fields: [albumId], references: [id])
-
+  albumId  String?    @db.Uuid
+  artistId String?    @db.Uuid
+  Artist   Artist?    @relation(fields: [artistId], references: [id])
+  Album    Album?     @relation(fields: [albumId], references: [id])
   Favorite Favorite[]
 
   @@index([artistId], name: "IDX_TRACK__ARTIST_ID")
