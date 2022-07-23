@@ -10,29 +10,29 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { Artist } from '@prisma/client';
 
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, UpdateArtistDto } from './dto';
-import { ArtistEntity } from './entities/artist.entity';
 
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto): ArtistEntity {
+  create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
     return this.artistService.create(createArtistDto);
   }
 
   @Get()
-  findAll(): ArtistEntity[] {
+  findAll(): Promise<Artist[]> {
     return this.artistService.findAll();
   }
 
   @Get(':id')
   findOne(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): ArtistEntity {
+  ): Promise<Artist> {
     return this.artistService.findOne(id);
   }
 
@@ -40,13 +40,15 @@ export class ArtistController {
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
-  ): ArtistEntity {
+  ): Promise<Artist> {
     return this.artistService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string): void {
+  remove(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ): Promise<void> {
     return this.artistService.remove(id);
   }
 }
