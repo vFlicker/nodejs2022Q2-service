@@ -10,29 +10,29 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { Artist } from '@prisma/client';
 
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, UpdateArtistDto } from './dto';
+import { ArtistEntity } from './entities/artist.entity';
 
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
+  create(@Body() createArtistDto: CreateArtistDto): Promise<ArtistEntity> {
     return this.artistService.create(createArtistDto);
   }
 
   @Get()
-  findAll(): Promise<Artist[]> {
+  findAll(): Promise<ArtistEntity[]> {
     return this.artistService.findAll();
   }
 
   @Get(':id')
   findOne(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Promise<Artist> {
+  ): Promise<ArtistEntity> {
     return this.artistService.findOne(id);
   }
 
@@ -40,7 +40,7 @@ export class ArtistController {
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
-  ): Promise<Artist> {
+  ): Promise<ArtistEntity> {
     return this.artistService.update(id, updateArtistDto);
   }
 

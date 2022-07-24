@@ -1,36 +1,40 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Artist } from '@prisma/client';
+import { plainToClass } from 'class-transformer';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { Message } from './constants/message.constants';
 import { CreateArtistDto, UpdateArtistDto } from './dto';
+import { ArtistEntity } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createArtistDto: CreateArtistDto): Promise<Artist> {
+  async create(createArtistDto: CreateArtistDto): Promise<ArtistEntity> {
     const newArtist = await this.prisma.artist.create({
       data: { ...createArtistDto },
     });
 
-    return newArtist;
+    return plainToClass(ArtistEntity, newArtist);
   }
 
-  async findAll(): Promise<Artist[]> {
+  async findAll(): Promise<ArtistEntity[]> {
     const artists = await this.prisma.artist.findMany();
-    return artists;
+    return artists.map((artist) => plainToClass(ArtistEntity, artist));
   }
 
-  async findOne(id: string): Promise<Artist> {
+  async findOne(id: string): Promise<ArtistEntity> {
     const artist = await this.prisma.artist.findUnique({ where: { id } });
 
     if (!artist) throw new NotFoundException(Message.NOT_FOUND);
 
-    return artist;
+    return plainToClass(ArtistEntity, artist);
   }
 
-  async update(id: string, updateArtistDto: UpdateArtistDto): Promise<Artist> {
+  async update(
+    id: string,
+    updateArtistDto: UpdateArtistDto,
+  ): Promise<ArtistEntity> {
     const artist = await this.prisma.artist.findUnique({ where: { id } });
 
     if (!artist) throw new NotFoundException(Message.NOT_FOUND);
@@ -40,29 +44,13 @@ export class ArtistService {
       data: { ...updateArtistDto },
     });
 
-    return updatedArtist;
+    return plainToClass(ArtistEntity, updatedArtist);
   }
 
   async remove(id: string): Promise<void> {
     const artist = await this.prisma.artist.findUnique({ where: { id } });
 
     if (!artist) throw new NotFoundException(Message.NOT_FOUND);
-
-    // for (const album of this.database.albums) {
-    //   if (album.artistId === id) album.artistId = null;
-    // }
-
-    // for (const track of this.database.tracks) {
-    //   if (track.artistId === id) track.artistId = null;
-    // }
-
-    // this.database.favorites.artists = this.database.favorites.artists.filter(
-    //   (artist) => artist.id !== id,
-    // );
-
-    // this.database.artists = this.database.artists.filter(
-    //   (artist) => artist.id !== id,
-    // );
 
     await this.prisma.artist.delete({ where: { id } });
   }

@@ -3,16 +3,19 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { Album, Artist, Favorite, Track } from '@prisma/client';
+import { Artist, Track } from '@prisma/client';
+import { plainToClass } from 'class-transformer';
 
+import { AlbumEntity } from '../album/entities/album.entity';
 import { PrismaService } from '../prisma/prisma.service';
 import { Message } from './constants/message.constants';
+import { FavoriteEntity } from './entities/favorite.entity';
 
 @Injectable()
 export class FavoriteService {
   constructor(private prisma: PrismaService) {}
 
-  async addAlbum(id: string): Promise<Album> {
+  async addAlbum(id: string): Promise<AlbumEntity> {
     const album = await this.prisma.album.findUnique({ where: { id } });
 
     if (!album) {
@@ -25,7 +28,7 @@ export class FavoriteService {
       data: { favoriteId },
     });
 
-    return album;
+    return plainToClass(AlbumEntity, album);
   }
 
   async addArtist(id: string): Promise<Artist> {
@@ -60,8 +63,12 @@ export class FavoriteService {
     return track;
   }
 
-  async findAll(): Promise<Favorite[]> {
-    const favorites = await this.prisma.favorite.findMany({
+  async findAll(): Promise<FavoriteEntity> {
+    const favorites = await this.prisma.favorite.findMany();
+
+    if (!favorites.length) await this.prisma.favorite.create({ data: {} });
+
+    const favorite = await this.prisma.favorite.findFirst({
       include: {
         albums: true,
         artists: true,
@@ -69,7 +76,7 @@ export class FavoriteService {
       },
     });
 
-    return favorites;
+    return plainToClass(FavoriteEntity, favorite);
   }
 
   async removeAlbum(id: string): Promise<void> {
@@ -77,7 +84,10 @@ export class FavoriteService {
 
     if (!album) throw new NotFoundException();
 
-    await this.prisma.album.delete({ where: { id } });
+    await this.prisma.album.update({
+      where: { id },
+      data: { favoriteId: null },
+    });
   }
 
   async removeArtist(id: string): Promise<void> {
@@ -85,7 +95,10 @@ export class FavoriteService {
 
     if (!artist) throw new NotFoundException();
 
-    await this.prisma.artist.delete({ where: { id } });
+    await this.prisma.artist.update({
+      where: { id },
+      data: { favoriteId: null },
+    });
   }
 
   async removeTrack(id: string): Promise<void> {
@@ -93,7 +106,10 @@ export class FavoriteService {
 
     if (!track) throw new NotFoundException();
 
-    await this.prisma.track.delete({ where: { id } });
+    await this.prisma.track.update({
+      where: { id },
+      data: { favoriteId: null },
+    });
   }
 
   private async getFavoriteId(): Promise<string> {

@@ -9,6 +9,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Album, Artist, Favorite, Track } from '@prisma/client';
+import { FavoriteEntity } from './entities/favorite.entity';
 
 import { FavoriteService } from './favorite.service';
 
@@ -38,7 +39,7 @@ export class FavoriteController {
   }
 
   @Get()
-  findAll(): Promise<Favorite[]> {
+  findAll(): Promise<FavoriteEntity> {
     return this.favoriteService.findAll();
   }
 

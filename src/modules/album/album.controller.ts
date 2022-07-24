@@ -10,29 +10,29 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { Album } from '@prisma/client';
 
 import { AlbumService } from './album.service';
 import { CreateAlbumDto, UpdateAlbumDto } from './dto';
+import { AlbumEntity } from './entities/album.entity';
 
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @Post()
-  create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
+  create(@Body() createAlbumDto: CreateAlbumDto): Promise<AlbumEntity> {
     return this.albumService.create(createAlbumDto);
   }
 
   @Get()
-  findAll(): Promise<Album[]> {
+  findAll(): Promise<AlbumEntity[]> {
     return this.albumService.findAll();
   }
 
   @Get(':id')
   findOne(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Promise<Album> {
+  ): Promise<AlbumEntity> {
     return this.albumService.findOne(id);
   }
 
@@ -40,7 +40,7 @@ export class AlbumController {
   update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
-  ): Promise<Album> {
+  ): Promise<AlbumEntity> {
     return this.albumService.update(id, updateAlbumDto);
   }
 
