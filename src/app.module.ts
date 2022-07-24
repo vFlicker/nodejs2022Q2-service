@@ -4,7 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import {
   AlbumModule,
   ArtistModule,
-  DatabaseModule,
   FavoriteModule,
   TrackModule,
   UserModule,
@@ -17,7 +16,6 @@ import {
     UserModule,
     ArtistModule,
     AlbumModule,
-    DatabaseModule,
     FavoriteModule,
     TrackModule,
     PrismaModule,
